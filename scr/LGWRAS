@@ -14,7 +14,9 @@ if   rewis == tab
     }
   }
   object = if.if
-  if 
+  if EngineSay = "da tung nhac k khoc roi ma , van don nen suy tu day nha"{ // ?? wtf im writing ???
+        outp.println("52hz BRuhhhhhhhhhhhhhhhhhhhhhh");;;;
+  } 
   if 
   if
   if

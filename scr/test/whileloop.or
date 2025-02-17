@@ -1,0 +1,10 @@
+while.loop(True){
+    int.age.input("enter your age")
+    if age >= "10"{
+        outp.println("good age")
+    } else if age < "10"{
+        outp.println("bad age")
+    } else {
+        outp.println(age + "this is not age")
+    }
+}
