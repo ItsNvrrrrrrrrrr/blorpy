@@ -1,10 +1,10 @@
-while.loop(True){
-    int.age.input("enter your age")
-    if age >= "10"{
-        outp.println("good age")
-    } else if age < "10"{
-        outp.println("bad age")
+while.loop(true) {
+    age.input("Nhập tuổi của bạn:")
+    if age > 100 {
+        outp.println("Sigma Skibidi")
+    } else if age >= 10 {
+        outp.println("Người lớn")
     } else {
-        outp.println(age + "this is not age")
+        outp.println("Trẻ trâu")
     }
 }
