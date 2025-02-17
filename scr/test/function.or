@@ -1,0 +1,27 @@
+public new function halopipi(){
+    while.loop(True) {
+        int.age.input("Nhập tuổi của bạn:")
+        if age > 1000 {
+            outp.println("wth")
+            break
+        } else if age > 100 {
+            outp.println("Sigma Skibidi")
+        } else if age >= 10 {
+            outp.println("Người lớn")
+        } else {
+            outp.println("Trẻ trâu")
+        }
+    }
+}
+public new function hello(){
+    outp.println("hello called in function hello()")
+}
+
+private main function(){
+    str.opt.input("the function want to call is ? : ")
+    if opt = age{
+        function.halopipi()
+    } else if opt = hello{
+        function.hello()
+    }
+}

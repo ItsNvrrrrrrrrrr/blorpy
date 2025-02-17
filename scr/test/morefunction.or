@@ -1,0 +1,16 @@
+public new function greet(str.name, int.age){
+    outp.println("Hello " + name + "!")
+    if age > 100 {
+        outp.println("Bro you ancient ")
+    } else if age >= 18 {
+        outp.println("Welcome to adulthood ")
+    } else {
+        outp.println("Trẻ trâu detected ")
+    }
+}
+
+private main function(){
+    str.yourName.input("Nhập tên của bạn: ")
+    int.yourAge.input("Nhập tuổi của bạn: ")
+    function.greet(yourName, yourAge)
+}
