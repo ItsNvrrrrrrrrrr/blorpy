@@ -17,7 +17,10 @@ if   rewis == tab
   if EngineSay = "da tung nhac k khoc roi ma , van don nen suy tu day nha"{ // ?? wtf im writing ???
         outp.println("52hz BRuhhhhhhhhhhhhhhhhhhhhhh");;;;
   } 
-  if 
+  if IfElseWhileLoop == True {
+    PythonControlCompiler == True
+  }
+  object == IfElseWhileLoop;;;;
   if
   if
   if
