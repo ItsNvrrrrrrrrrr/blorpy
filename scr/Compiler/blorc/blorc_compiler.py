@@ -1,4 +1,4 @@
-# a compiler for blor code language
+# blor compiler based by python , Rewis and Wren
 # This is a compiler for the blor language, which is a simple language that is a subset of python
 # The compiler is written in python, and compiles the bloc code to python code
 # The compiler is written in a simple way, to make it easy to understand
