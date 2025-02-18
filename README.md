@@ -25,50 +25,40 @@ cd blor
 Install the required dependencies:
 
     pip install -r requirements.txt
-
 Syntax
 
 Here are some basic syntaxes in Blor:
 Variable Declaration
 
-int.x = 10
-str.name = "Blor"
+    int.x = 10
+    str.name = "Blor"
 
 Output
 
 Use outp.println to print to the console:
 
-outp.println("Hello, World!")
+    outp.println("Hello, World!")
 
 Conditionals
 
 Blor uses if, else if, and else for conditionals:
 
-if x == 10:
-    outp.println("X is 10")
-else if x > 10:
-    outp.println("X is greater than 10")
-else:
-    outp.println("X is less than 10")
+    if x == 10 {
+        outp.println("X is 10")
+    }     else if x > 10:
+        outp.println("X is greater than 10")
+    }     else
+        outp.println("X is less than 10")
+    }
+    }
 
 Loops
 
 Blor supports while loops:
 
-while.loop(x < 10):
-    outp.println(x)
-    x = x + 1
-
-Functions
-
-Define functions with the public new function or private main function keywords:
-
-public new function add(a, b):
-    return a + b
-
-Input
-
-int.x.input("Enter a number:")
+    while.loop(x < 10):
+        outp.println(x)
+        x = x + 1
 
 Usage
 
@@ -85,14 +75,17 @@ Examples
 
 Here is a simple example of a Blor program:
 
-public new function greet(name):
-    outp.println("Hello, " + name)
-
-greet("World")
+    str.name.input("enter your name")
+    public new function greet(name){
+        outp.println("Hello, " + name)
+    }
+    private main function() {
+        function.greet(name)
+    }
 
 Output:
 
-Hello, World
+    Hello, <your input name>
 
 Common Issues
 
