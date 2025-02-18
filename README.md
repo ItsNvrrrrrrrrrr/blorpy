@@ -19,7 +19,7 @@ Step 2: Install Blor Compiler
 
     Run the following commands in your terminal:
 
-git clone https://github.com/your-repo/blor.git
+git clone https://github.com/ItsNvrrrrrrrrrr/blorpy.git
 cd blor
 
 Install the required dependencies:
