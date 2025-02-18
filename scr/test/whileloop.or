@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-while.loop(true) {
-    age.input("Nhập tuổi của bạn:")
-=======
 while.loop(True) {
     int.age.input("Nhập tuổi của bạn:")
->>>>>>> 3473b01 (gay)
     if age > 100 {
         outp.println("Sigma Skibidi")
     } else if age >= 10 {

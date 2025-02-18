@@ -1,0 +1,5 @@
+from '/workspaces/blorpy/zob/zob.zob' import module.Zobtest
+
+private main function() {
+    Zobtest.crush()
+}

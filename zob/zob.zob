@@ -1,0 +1,7 @@
+public module Zipip {
+    public new function crush() {
+        while.loop(True) {
+            outp.println("i love manh duc")
+        }
+    }
+}
