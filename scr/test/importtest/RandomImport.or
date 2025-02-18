@@ -1,0 +1,11 @@
+import Random
+
+random = Random(0,1)
+
+// outp.println(random)
+
+if random == 1 {
+    outp.println("true")
+} else if Random == 0 {
+    outp.println("false")
+}

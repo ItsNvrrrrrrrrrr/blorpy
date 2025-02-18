@@ -1,0 +1,22 @@
+// first library in blor 
+public new function blor___call__(self, *args, **kwargs) {
+
+
+public module Random {
+    public new function blor_generateRandom(int.min, int.max) {
+        py: import random
+        py: return random.randint(min, max)
+    }
+
+    public new function blor_shuffleList(list.items) {
+        py: import random
+        py: random.shuffle(items)
+        py: return items
+    }
+
+    // Make the module callable: Random(0,1) will generate a random number
+    public new function blor___call__(int.min, int.max) {
+        py: return blor_generateRandom(min, max)
+    }
+}
+}

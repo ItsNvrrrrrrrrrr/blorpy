@@ -8,9 +8,9 @@
 import re
 import os
 import sys
-# Add the source directory to sys.path so that BlorImportModule can be imported.
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../source"))
-from BlorImportModule import process_import  # Updated import for module processing
+# Insert the directory containing BlorImportModule.py into sys.path.
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "source"))
+from BlorImportModule import process_import  # Now this should import correctly
 
 def clean_condition(cond):
     # Replace double-quoted numbers with unquoted numbers for numeric comparisons.
@@ -35,15 +35,51 @@ def process_println_expr(expr):
     # Build and return the final f-string.
     return f'f"{ "".join(parts) }"'
 
-def translate_line(line, stored):
+def translate_line(line, stored, alias_disabled=False):
+    # Pass through raw Python lines prefixed by "py:".
+    if line.lstrip().startswith("py:"):
+        return [line.lstrip()[3:].lstrip()], stored
+    # New branch: support alias import for lines like "import Random" (with uppercase first letter)
+    alias_match = re.match(r'^import\s+([A-Z][a-zA-Z0-9_]*)$', line.lstrip())
+    if alias_match and not alias_disabled:
+        alias = alias_match.group(1)
+        # Updated: use the alias as the module name.
+        constructed = f"from {alias.lower()} import module.{alias}"
+        try:
+            py_code = process_import(constructed)
+            return [py_code], stored
+        except Exception as e:
+            raise SyntaxError(e)
+    
+    # New branch: pass through Python lines unchanged.
+    if line.lstrip().startswith("import ") or line.lstrip().startswith("return "):
+        return [line], stored
+
+    # New branch: allow generic assignment lines (e.g. random = Random(0,1)) to pass through.
+    if re.match(r'^[a-zA-Z_]\w*\s*=\s*.+$', line):
+        return [line], stored
+
+    # New branch: support “import Alias” syntax only if not disabled.
+    if not alias_disabled:
+        import_match = re.match(r'^import\s+([a-zA-Z_]\w*)$', line)
+        if import_match:
+            alias = import_match.group(1)
+            # Updated: use the alias as the module name.
+            constructed = f"from {alias.lower()} import module.{alias}"
+            try:
+                py_code = process_import(constructed)
+                return [py_code], stored
+            except Exception as e:
+                raise SyntaxError(e)
+    
     # New: Allow simple module function calls like "Zobtest.call()"
     if re.match(r'^\w+\.\w+\(\)$', line):
         return [line], stored
 
-    # New: Check for common typos.
+    # New: Check for common typos using regex with word boundaries.
     typo_map = {
-        "st.": "str.",
-        "it.": "int.",
+        r"\bst\.": "str.",
+        # "it.": "int."  # (removed to avoid matching within "list")
         "oup.println": "outp.println",
         "oup.print": "outp.print",
         "publc": "public",
@@ -51,9 +87,9 @@ def translate_line(line, stored):
         "functon": "function",
         "funcion": "function"
     }
-    for typo, correction in typo_map.items():
-        if typo in line:
-            suggested = line.replace(typo, correction)
+    for pattern, correction in typo_map.items():
+        if re.search(pattern, line):
+            suggested = re.sub(pattern, correction, line)
             raise SyntaxError(f"Unsupported syntax '{line}'. Did you mean '{suggested}'?")
     
     lines_out = []
@@ -121,9 +157,6 @@ def translate_line(line, stored):
     elif re.match(r'^(public new|private main)\s+function\s+(\w+)\s*\((.*)\)\s*(\{)?\s*$', line):
         m = re.match(r'^(public new|private main)\s+function\s+(\w+)\s*\((.*)\)\s*(\{)?\s*$', line)
         func_name = m.group(2)
-        # Enforce that function names must include 'blor' (case-insensitive)
-        if "blor" not in func_name.lower():
-            raise SyntaxError(f"Function name '{func_name}' must include 'blor'")
         params_list = m.group(3).strip()
         if params_list:
             # Split by comma and remove type prefixes (e.g. "str." or "int.").
@@ -151,7 +184,7 @@ def translate_line(line, stored):
         raise SyntaxError(f"Unsupported syntax in line: '{line}'. Please verify your Blor syntax.")
     return lines_out, stored
 
-def blor_to_python(blor_code):
+def blor_to_python(blor_code, alias_disabled=False):
     python_code = []
     errors = []
     indent = 0
@@ -167,6 +200,7 @@ def blor_to_python(blor_code):
             indent = max(indent - 1, 0)
             line = line[1:].strip()
         increase = False
+        # Correct the method call below:
         if line.endswith("{"):
             increase = True
             line = line[:-1].strip()
@@ -174,7 +208,7 @@ def blor_to_python(blor_code):
         if not line:
             continue
         try:
-            trans_lines, stored_content = translate_line(line, stored_content)
+            trans_lines, stored_content = translate_line(line, stored_content, alias_disabled)
             for t in trans_lines:
                 python_code.append("    " * indent + t)
             if increase:
