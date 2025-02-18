@@ -1,0 +1,4 @@
+public module callit{
+    str.a = "hello user"
+    int.b = 123
+}

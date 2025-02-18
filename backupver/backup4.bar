@@ -6,11 +6,7 @@
 
 
 import re
-import os
 import sys
-# Add the source directory to sys.path so that BlorImportModule can be imported.
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../source"))
-from BlorImportModule import process_import  # Updated import for module processing
 
 def clean_condition(cond):
     # Replace double-quoted numbers with unquoted numbers for numeric comparisons.
@@ -54,30 +50,6 @@ def translate_line(line, stored):
             raise SyntaxError(f"Unsupported syntax '{line}'. Did you mean '{suggested}'?")
 
     lines_out = []
-    # New: Support module definition header in .zob files
-    if re.match(r'^public\s+module\s+(\w+)\s*\{', line):
-        m = re.match(r'^public\s+module\s+(\w+)\s*\{', line)
-        module_name = m.group(1)
-        # Skip the module header; you could also store the module name if needed.
-        return [f"# Begin module {module_name}"], stored
-
-    # New: Support variable assignments with type prefix (for .zob modules)
-    elif re.match(r'^(int|str)\.([a-zA-Z_]\w*)\s*=\s*(.+)$', line):
-        m = re.match(r'^(int|str)\.([a-zA-Z_]\w*)\s*=\s*(.+)$', line)
-        var_type = m.group(1)
-        var_name = m.group(2)
-        expr = m.group(3).strip()
-        # Simply remove the type prefix and output a plain assignment.
-        return [f"{var_name} = {expr}"], stored
-
-    # New: Support Blor import commands using the BlorImportModule.
-    if line.startswith("from "):
-        try:
-            py_code = process_import(line)
-            return [py_code], stored
-        except Exception as e:
-            raise SyntaxError(e)
-
     # Updated: Use regex to match outp.println() patterns.
     m = re.match(r'^outp\.println\((.*)\)$', line)
     if m:
@@ -90,6 +62,14 @@ def translate_line(line, stored):
         return [line_out], stored
     elif line == "outp.print()":
         lines_out = ["print(blor_content)"]
+    # New: support variable assignment with type prefix (e.g., str.hello = "hello user")
+    elif re.match(r'^(int|str)\.([a-zA-Z_]\w*)\s*=\s*(.+)$', line):
+        m = re.match(r'^(int|str)\.([a-zA-Z_]\w*)\s*=\s*(.+)$', line)
+        var_type = m.group(1)
+        var_name = m.group(2)
+        expr = m.group(3).strip()
+        line_out = f"{var_name} = {expr}"
+        return [line_out], stored
     # New: support generic variable input for int and str (e.g. int.yourAge.input("..."), str.yourName.input("..."))
     m = re.match(r'^(int|str)\.([a-zA-Z_]\w*)\.input\((.*?)\)$', line)
     if m:
@@ -145,12 +125,6 @@ def translate_line(line, stored):
     # New: support 'break'
     elif line == "break":
         lines_out = ["break"]
-    # New: Support module initialization command (e.g. callit.init)
-    elif re.match(r'^(\w+)\.init$', line):
-        m = re.match(r'^(\w+)\.init$', line)
-        module_name = m.group(1)
-        # For now, output a comment. Later, you might call module initializer functions.
-        return [f"# Initialize module {module_name}"], stored
     elif re.match(r'^[a-zA-Z_][a-zA-Z0-9_]* = .*', line):
         lines_out = [line]
     # Support 4-space indented lines pass-through (e.g. for inner content)

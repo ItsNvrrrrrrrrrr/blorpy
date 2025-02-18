@@ -1,1 +1,7 @@
-outp.println("hello")
+str.hello = "hello user"
+int.numbers = 1234567
+
+outp.println("hello, world")
+outp.println(123)
+outp.println(hello)
+outp.println(numbers)

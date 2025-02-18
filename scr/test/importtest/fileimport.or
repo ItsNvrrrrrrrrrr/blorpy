@@ -1,0 +1,9 @@
+
+// import module callit
+
+from importfile.zob import module.callit
+
+// use module callit
+
+outp.println(a)
+outp.println(b)
